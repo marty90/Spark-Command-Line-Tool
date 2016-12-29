@@ -106,7 +106,7 @@ In this section we use as input file the sample dataset provided in this reposit
 Count the occurrency number of each word:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
-         --textFile file:///$(pwd)/lore-ispum.txt \
+         --textFile file:///$(pwd)/lore-ipsum.txt \
          --flatMap "e.split()" \
          --map "(e,1)" \
          --countByKey \
@@ -117,7 +117,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
 Count the occurrency number of each word and sort the output by occurency number (high to low):
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
-         --textFile file:///$(pwd)/lore-ispum.txt \
+         --textFile file:///$(pwd)/lore-ipsum.txt \
          --flatMap "e.split()" \
          --map "(e,1)" \
          --countByKey \
@@ -129,7 +129,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
 Count how many words (space separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
-         --textFile file:///$(pwd)/lore-ispum.txt \
+         --textFile file:///$(pwd)/lore-ipsum.txt \
          --flatMap "e.split()" \
          --count \
          --saveLocal WordNumber.txt
@@ -138,17 +138,17 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
 Count how many distinct words (space separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
-         --textFile file:///$(pwd)/lore-ispum.txt \
+         --textFile file:///$(pwd)/lore-ipsum.txt \
          --flatMap "e.split().lower()" \
          --distinct \
          --count \
          --saveLocal DistinctWordNumber.txt
 ```
-## 4.4 Initial Letter Count
+## 4.5 Initial Letter Count
 Count initial letters occurrencies in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
-         --textFile file:///$(pwd)/lore-ispum.txt \
+         --textFile file:///$(pwd)/lore-ipsum.txt \
          --flatMap "e.split()" \
          --map "(e[0].lower(),1)" \
          --countByKey \
