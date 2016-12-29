@@ -52,44 +52,93 @@ This tool heavily uses `eval` and `exec` *python builtins*; so, be careful when 
 All arguments must be python expressions; if you are not familiar with *python* (2.7), please read [something](https://docs.python.org/2/).
 
 # 3. Running a Job
-bla bla
+The tool has the followind syntax:
+```
+spark-submit Spark-Command-Line-Tool.py [-h] [--import MODULE] [--textFile FILE]
+                                  [--filter FUNC] [--map FUNC]
+                                  [--flatMap FUNC] [--distinct]
+                                  [--sortBy FUNC] [--sortByKey FUNC]
+                                  [--reduceByKey FUNC] [--mapPartitions FUNC]
+                                  [--groupByKey] [--reduce FUNC] [--count]
+                                  [--countByKey] [--take N] [--saveHDFS FILE]
+                                  [--saveLocal FILE]
 
-## 4 Examples
-In this section we use as input file the sample dataset provided [here](http://spark.apache.org/...).
-## 4.1 Count
-To select all the lines in the tcp_complete log where the *FQDN* is `www.facebook.com`, you can type:
-```
-path='hdfs://.../2016_11_27_*/log_tcp_complete.gz'
-spark-submit  simple_query.py -i $path -o "facebook_flows" \
-              --query "fqdn=='www.facebook.com'"
-```
-### 3.1.2 HTTP requests to port 7547
-To select all the urls on server port 7547, you can use:
-```
-path='hdfs://.../2016_11_27_*/log_http_complete.gz'
-spark-submit  simple_query.py -i $path -o "port_7547" -s tab \
-              --query "s_port=='7547'"
-```
-Please note that all fields are strings. If you want to evaluate them as integer or float, you must explicitely convert them.
+Spark Command Line Tool allows one to have set up a Spark job using a command
+line. All functions must be Python expressions.
 
-# 4. Running an advanced query (map + reduce)
-This kind of query is more complex than the previous one since it **includes a *filter*, a *map* and a *reduce* transformation.**
-Optionally, you can specify a second map transformation if you use *ReduceByKey* that will be executed after the latter.
-Three kinds of workflows are allowed.
-* *Filter* -> *Map* -> *Distinct*
-* *Filter* -> *Map* -> *Reduce*
-* *Filter* -> *Map* -> *ReduceByKey* ( -> *Map*)
-
-The command line syntax is:
-```
-spark-submit advanced_query.py [-h] [-i input] [-o output] [--filter filter]
-                         [--map map] [--distinct] [--reduce reduce]
-                         [--reduceByKey reduceByKey] [--finalMap finalMap]
-                         [--separator separator] [-l]
 optional arguments:
   -h, --help            show this help message and exit
-  -i input, --input input
-                        Input log files path.
-  -o output, --output output
-                        Output file where the result of the query is written.
-
+  --import MODULE       Import an external library or a local module file.
+  --textFile FILE       Create and RDD from a text file, local or on HDFS.
+  --filter FUNC         Func(e) => bool
+  --map FUNC            Func(e) => object
+  --flatMap FUNC        Func(e) => iterable
+  --distinct
+  --sortBy FUNC         Func(e) => object
+  --sortByKey FUNC      Func(e) => object
+  --reduceByKey FUNC    Func(v1,v2) => object
+  --mapPartitions FUNC  Func(e) => iterable
+  --groupByKey
+  --reduce FUNC         Func(v1,v2) => object
+  --count
+  --countByKey
+  --take N
+  --saveHDFS FILE       Save the output on the HDFS file system.
+  --saveLocal FILE      Save the output on the local file system.
+ ```
+ 
+# 4 Examples
+In this section we use as input file the sample dataset provided in this repository with the name `lorem-ipsum.txt`.
+## 4.1 Word Count
+Count the occurrency number of each word:
+```
+spark-submit --master local[*] Spark-Command-Line-Tool.py \
+         --textFile file:///$(pwd)/lore-ispum.txt \
+         --flatMap "e.split()" \
+         --map "(e,1)" \
+         --countByKey \
+         --map "e[0] + ' ' + str(e[1])" \
+         --saveLocal WordCount.txt
+```
+## 4.2 Word Count with sorted output
+Count the occurrency number of each word and sort the output by occurency number (high to low):
+```
+spark-submit --master local[*] Spark-Command-Line-Tool.py \
+         --textFile file:///$(pwd)/lore-ispum.txt \
+         --flatMap "e.split()" \
+         --map "(e,1)" \
+         --countByKey \
+         --sortBy "0-e[1]" \
+         --map "e[0] + ' ' + str(e[1])" \
+         --saveLocal SortedWordCount.txt
+```
+# 4.3 Overall Word Count
+Count how many words (sapce separated) are present in the document:
+```
+spark-submit --master local[*] Spark-Command-Line-Tool.py \
+         --textFile file:///$(pwd)/lore-ispum.txt \
+         --flatMap "e.split()" \
+         --count \
+         --saveLocal WordNumber.txt
+```
+# 4.4 Distinct Word Count
+Count how many words (sapce separated) are present in the document:
+```
+spark-submit --master local[*] Spark-Command-Line-Tool.py \
+         --textFile file:///$(pwd)/lore-ispum.txt \
+         --flatMap "e.split()" \
+         --distinct \
+         --count \
+         --saveLocal DistinctWordNumber.txt
+```
+# 4.4 Initial Letter Count
+Count how many words (sapce separated) are present in the document:
+```
+spark-submit --master local[*] Spark-Command-Line-Tool.py \
+         --textFile file:///$(pwd)/lore-ispum.txt \
+         --flatMap "e.split()" \
+         --map "(e[0].lower(),1)" \
+         --countByKey \
+         --map "e[0] + ' ' + str(e[1])" \
+         --saveLocal InitialLetter.txt
+```
