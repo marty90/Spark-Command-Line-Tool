@@ -6,8 +6,6 @@ Spark Command Line Tool allows one to have set up a Spark job using a command li
 <!---
 Done with https://github.com/ekalinin/github-markdown-toc )
 -->
-   * [Spark Command Line Tool](#spark-command-line-tool)
-   * [Table of Content](#table-of-content)
    * [1. Description](#1-description)
    * [2. Prerequisites](#2-prerequisites)
       * [2.1 Getting Started](#21-getting-started)
