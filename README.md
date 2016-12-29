@@ -126,7 +126,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --saveLocal SortedWordCount.txt
 ```
 ## 4.3 Overall Word Count
-Count how many words (sapce separated) are present in the document:
+Count how many words (space separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --textFile file:///$(pwd)/lore-ispum.txt \
@@ -135,17 +135,17 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --saveLocal WordNumber.txt
 ```
 ## 4.4 Distinct Word Count
-Count how many words (sapce separated) are present in the document:
+Count how many distinct words (space separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --textFile file:///$(pwd)/lore-ispum.txt \
-         --flatMap "e.split()" \
+         --flatMap "e.split().lower()" \
          --distinct \
          --count \
          --saveLocal DistinctWordNumber.txt
 ```
 ## 4.4 Initial Letter Count
-Count how many words (sapce separated) are present in the document:
+Count initial letters occurrencies in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --textFile file:///$(pwd)/lore-ispum.txt \
