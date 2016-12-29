@@ -112,7 +112,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --map "e[0] + ' ' + str(e[1])" \
          --saveLocal SortedWordCount.txt
 ```
-# 4.3 Overall Word Count
+## 4.3 Overall Word Count
 Count how many words (sapce separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
@@ -121,7 +121,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --count \
          --saveLocal WordNumber.txt
 ```
-# 4.4 Distinct Word Count
+## 4.4 Distinct Word Count
 Count how many words (sapce separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
@@ -131,7 +131,7 @@ spark-submit --master local[*] Spark-Command-Line-Tool.py \
          --count \
          --saveLocal DistinctWordNumber.txt
 ```
-# 4.4 Initial Letter Count
+## 4.4 Initial Letter Count
 Count how many words (sapce separated) are present in the document:
 ```
 spark-submit --master local[*] Spark-Command-Line-Tool.py \
