@@ -83,6 +83,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --import MODULE       Import an external library or a local module file.
   --textFile FILE       Create and RDD from a text file, local or on HDFS.
+  --wholeTextFiles FILE       Create and RDD from a text file, local or on HDFS.
   --filter FUNC         Func(e) => bool
   --map FUNC            Func(e) => object
   --flatMap FUNC        Func(e) => iterable
