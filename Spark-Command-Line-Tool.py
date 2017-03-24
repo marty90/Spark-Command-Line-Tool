@@ -5,6 +5,8 @@ import argparse
 import importlib
 from subprocess import call
 from pyspark import SparkConf, SparkContext
+hdfs_command="hdfs"
+
 
 def main():
 
@@ -17,6 +19,8 @@ def main():
                                     help='Import an external library or a local module file.')                                                       
     parser.add_argument('--textFile',  action=SparkAction, metavar="FILE", 
                                        help='Create and RDD from a text file, local or on HDFS.') 
+    parser.add_argument('--wholeTextFiles',  action=SparkAction, metavar="FILES", 
+                                       help='Create and RDD from a path containing multiple files, local or on HDFS.') 
                                       
     # Transformations                                                      
     parser.add_argument('--filter',  action=SparkAction, metavar="FUNC", help='Func(e) => bool')  
@@ -63,6 +67,9 @@ def main():
 
         if action == "textFile":
             this_RDD=sc.textFile(arg)    
+
+        elif action == "wholeTextFiles":
+            this_RDD=sc.wholeTextFiles(arg)
 
         elif action == "filter":
             func = getSingleArgFunction (eval('lambda e: ' + arg), import_list)
@@ -112,13 +119,13 @@ def main():
             this_RDD=sc.parallelize(this_RDD.take(int(arg)))
                         
         elif action == "saveLocal":
-            call ("/usr/local/hadoop/bin/hdfs dfs -rm -r " + arg, shell=True)
+            call (hdfs_command + " dfs -rm -r " + arg, shell=True)
             this_RDD.saveAsTextFile(arg)
-            call ("/usr/local/hadoop/bin/hdfs dfs -getmerge " + arg + " " + arg , shell=True)  
-            call ("/usr/local/hadoop/bin/hdfs dfs -rm -r " + arg, shell=True)
+            call (hdfs_command + " dfs -getmerge " + arg + " " + arg , shell=True)  
+            call (hdfs_command + " dfs -rm -r " + arg, shell=True)
 
         elif action == "saveHDFS":
-            call ("/usr/local/hadoop/bin/hdfs dfs -rm -r " + arg, shell=True)
+            call (hdfs_command + " dfs -rm -r " + arg, shell=True)
             this_RDD.saveAsTextFile(arg)          
                         
                         
